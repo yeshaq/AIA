@@ -37,13 +37,13 @@ A bond with a ``discharged'' status may or may not have been forfeited. This mak
 
 For data analysis to work, non-numerical data must be categorized. This allows the mathematical models to translate each category to numeric form (i.e. Male/Female $\rightarrow$ 0/1), currently:  
 \begin{itemize}
-\item Charges associated with bonds are filled with either state-dependent crimal codes, abreviated crime, generalizations, or left blank altogether. A suggestion would be to have drop down menu with a severity rank of crime.  
-\item Defendant employement information is often filled with a business name or ``self employed'', which by itself is not very useful. A useful substitue could be an income bracket information from a drop down menu. 
+\item Charges associated with bonds are filled with either state-dependent criminal codes, abbreviated crime, generalizations, or left blank altogether. A suggestion would be to have drop down menu with a severity rank of crime.  
+\item Defendant employment information is often filled with a business name or ``self employed'', which by itself is not very useful. A useful substitute could be an income bracket information from a drop down menu. 
 \item Defendant relationships are filled with strings such as ``babby mama''. Solution would be to provide options (i.e. ex-partner).
 \end{itemize}
 \end{itemize}
 ~\\
-\section{Project Roadmaps}
+\section{Project Road-maps}
 
 \subsection{Project A : \underline{A logistic regression model for Failure to Appear}}
 \subsubsection{The Goal}
@@ -59,8 +59,8 @@ Y = B_{0} + B_{1}X_{1} + B_{2}X_{2} + \ldots + \epsilon_{1}+\epsilon_{2} + \ldot
 \end{equation}
 \begin{itemize}
 \item Y: outcome variable (ex: Will fail to appear?)
-\item X: pridictor variables (ex: Defendents age, bail amount \ldots)
-\item B: coeffecients relating X's and Y
+\item X: predictor variables (ex: Defendant's age, bail amount \ldots)
+\item B: coefficients relating X's and Y
 \item $\epsilon$: error terms (a.k.a residual)
 \end{itemize}
 ~\\
@@ -80,6 +80,11 @@ As a proof of concept, four data variables were looked at for the initial model:
 \end{figure}
 
 \item Gender
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.5\paperwidth]{Forfeited_vs_Discharged_Gender.png}
+\end{figure}
+
 \end{enumerate}
 ~\\
 \textbf{Characteristic of the environment:}
@@ -146,10 +151,10 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 %\end{tabular}
 %
 ~\\
-example model predicitions:
+example model predictions:
 ~\\
 ~\\
-\underline{Defendent 1:}
+\underline{Defendant 1:}
 ~\\
 \begin{itemize}
 \item Age: 38
@@ -159,12 +164,12 @@ example model predicitions:
 \item Known to have failed to appeared
 \end{itemize}
 ~\\
-Probablity calculated by the model: 75\% to fail to appear
+Probability calculated by the model: 75\% to fail to appear
 In reality, the bond was forfeited. This is called a ``true positive''.
 
 
 ~\\
-\underline{Defendent 2:}
+\underline{Defendant 2:}
 ~\\
 \begin{itemize}
 \item Age:             23   
@@ -174,7 +179,7 @@ In reality, the bond was forfeited. This is called a ``true positive''.
 \item Known to have appeared
 \end{itemize}
 ~\\
-Probablity calculated by the model: 62\% to fail to appear
+Probability calculated by the model: 62\% to fail to appear
 In reality, the defendant appeared in court and the bond was discharged. 
 This is called a ``false positive''.
 ~\\
@@ -188,45 +193,34 @@ The aim is to maximize true positives and minimize false positives.
 \includegraphics[width=0.40\paperwidth,page=3]{varPlot.pdf}
 \end{figure}
  
-\subsubsection{Deliverables}
-A ``model'' (equation) which would allow an agent to calculate the probablity of FTA given the characteristics of the defendant and the bond.
-%A confidence interval around the probability will also be calculated to give the agent a 
+\subsubsection{Deliverables and Work Estimate}
+A ``model'' (equation) which would allow an agent to calculate the probability of FTA given the characteristics of the defendant and the bond.
 The validity and performance of the model will be fully tested and reported. 
-   
-
-\subsubsection{Work Estimates}
- parsing/cleaning of entire training and test datasets
- categorizing variables (ex:work/collateral/co-signers)
- constructing model
- validation of model
-
+~\\
+~\\
 \textbf{1 month at \$80/hour = \$12,800}
 
 \clearpage
 \subsection{Project B: \underline{Agent Performance}}
 ~\\
 \subsubsection{Ranking}
-Ranking system: \textit{Going beyond total premimum brought in:} \\
+Ranking system: \textit{Going beyond total premium brought in:} \\
 ~\\
 Goal: Construct an agent ranking system to assess the ``health'' of an 
-agent's business. The metric should not focus solely on the total premium 
-brought in, as this unfairly compare agencies in different crime rate 
-areas. The ranking metric should be built robust against fluctuations 
-in premium brought in. An agent with a low penal but good ``health'' 
-could indicate a bottlneck in the business.  Is the agent too 
-conservative? Or is the premium rate too high? The Underwriting limit too low? Etc..
-%In order to build this ranking system an initial step would be to produce performance plots of agents and AIA. Performance plots
-%could include three granularities, agent level, state level, and national level: 
+agent's business. The metric should be intelligent enough to fairly compare agencies nationwide. 
+For example it cannot focus solely on the total penal written, as this unfairly compares 
+agencies in areas of differing crime rates. The ranking metric should be built robust 
+against monthly fluctuations in penal written (for example a trend analysis can be incorporated.)
 
-\begin{itemize}
-\item premiums and BUF amount obtained from agents. 
-\item Total penal written by agent
-\item current trend
-\end{itemize}
 
 \subsubsection{The Arising Question}
-Once a ranking is established  
-Once the ranking metric is established, one can look for trends in the data as a solution to increase penal for an agent:
+
+We believe that after establishing the ranking, a primary question will arise that we propose to answer 
+in this project. It is hard to predict what that question will be, but we work through an example below.  
+%For example 
+%an agent with a low penal but good ``health'' could indicate a bottlneck in the business. Is the agent too 
+%conservative? Or is the premium rate too high? The underwriting limit too low? Etc...
+
 ~\\
 ~\\
 \underline{Example Question:}
@@ -267,18 +261,18 @@ The following figures show the premium collected from agents throughout their nu
 \end{figure}
 \end{center}
 ~\\
-
-Looking at the different agencies, it becomes apparent that on average each write varying volume of penal per day.  
-
-We can construct a linear model which relates the premium collected from agents as a function of premium rate.
-Plotting these two values against each other we get: 
+Looking at the different agencies, it becomes apparent that on average each write varying volume of penal per day.
+A normalization is applied in order to be able to relate these agencies with one model.
+~\\
+~\\
+As a start we plot the premium collected vs. the premium rate:
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.45\paperwidth]{premPinnedNoLine.png}
 \end{figure}
-
-
+~\\
+We can construct a linear model which relates the premium collected from agents as a function of premium rate.
 
 \begin{figure}[H]
 \centering
@@ -299,9 +293,21 @@ Multiple R-squared:  0.07183,Adjusted R-squared:  0.06712
 F-statistic: 15.25 on 1 and 197 DF,  p-value: 0.0001296
 \end{BVerbatim}
 \end{figure}
+~\\
+The p-value for premium rate indicates that the variable is significant.  Meaning the 
+model would perform much worse if the variable is taken out. But the adjusted R-squared value is
+near 7\%, indicating that only a small amount of the variation in the data is explained by the current model.
+~\\
+~\\
+This becomes more evident when we plot the fit on top of the data:
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.45\paperwidth]{pinnedPremPerDay.png}
+\end{figure}
 
 
-Adding another variable...\\
+Let's try to improve the model by adding another variable: The underwriting limit. \\
 
 \begin{figure}[H]
 \begin{center}
@@ -324,21 +330,29 @@ F-statistic: 16.29 on 2 and 196 DF,  p-value: 2.856e-07
 \end{BVerbatim}
 \end{center}
 \end{figure}
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.45\paperwidth]{pinnedPremPerDay.png}
-\end{figure}
-
-
+~\\
+We see that the significance of the premium rate drops (but is still significant), while the underwriting limit 
+plays an important role in the model.  The adjusted R-squared has doubled from our previous model, i.e. the model
+does a better job of explaining the variations in the data.  We see this better below:
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.45\paperwidth]{pinnedPremPerDayWithUWL.png}
 \end{figure}
 
-In some fields, it is entirely expected that your R-squared values will be low. For example, any field that attempts to predict human behavior, such as psychology, typically has R-squared values lower than 50\%. Humans are simply harder to predict than, say, physical processes.
+The aim is to continuously improve the model to increase the R-squared 
+value by adding relevant variables. In some fields, it is entirely expected 
+that your R-squared values will be low. For example, any field that attempts 
+to predict human behavior, such as psychology, typically has R-squared values 
+lower than 50\%. Humans are simply harder to predict than, say, physical processes.
 
+\subsubsection{Deliverables and Work Estimate}
+This project aims to build a ranking system which would allow to establish the health of agencies and in turn of AIA.
+After the ranking is validated, a question underlying the ranking is formulated and answered through a detailed analysis. 
+The exact question is to be determined after the ranking is established in order to ensure the correct and relevant question is asked.   
+~\\
+~\\
+\textbf{1.5 month at \$80/hour = \$19,200}
 
 \end{document}
 
