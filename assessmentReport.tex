@@ -3,22 +3,29 @@
 \usepackage{enumerate}
 \usepackage{float}
 \usepackage{amssymb, amsmath}
-\usepackage[letterpaper]{geometry}
+\usepackage{fancyvrb}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage[letterpaper, margin=1in]{geometry}
 
 
 \begin{document}
 
 \title{Assessment Report for AIA}
-\date{October 31, 475}
+%\today
 \author{KEE Consulting\\ 
         Los Angeles}
 
 \maketitle
-\clearpage
+%\clearpage
+
+
+
 \section{Data Infrastructure}
 
 Overall the data infrastructure is in good shape. 
-
+~\\
+~\\
 Greatest weakness of current dataset is that it is being populated by numerous agents each with varying standards.  This poses two problems:
 
 \begin{itemize}
@@ -28,17 +35,43 @@ A bond with a ``discharged'' status may or may not have been forfeited. This mak
  
 \item The variability of the data becomes unmanageable:
 
-For example strings such as “babby mama” as defendant relationship makes data categorization nearly impossible. Solution would be to provide a drop down choices (i.e. ex-partner).
+For data analysis to work, non-numerical data must be categorized. This allows the mathematical models to translate each category to numeric form (i.e. Male/Female $\rightarrow$ 0/1), currently:  
+\begin{itemize}
+\item Charges associated with bonds are filled with either state-dependent crimal codes, abreviated crime, generalizations, or left blank altogether. A suggestion would be to have drop down menu with a severity rank of crime.  
+\item Defendant employement information is often filled with a business name or ``self employed'', which by itself is not very useful. A useful substitue could be an income bracket information from a drop down menu. 
+\item Defendant relationships are filled with strings such as ``babby mama''. Solution would be to provide options (i.e. ex-partner).
 \end{itemize}
-
+\end{itemize}
+~\\
 \section{Project Roadmaps}
-\subsection{Project A : \underline{A linear regression model for Failure to Appear}}
-The goal is to construct a model which relates the “probability” of failure to appear (FTA) to variables through a coefficient for each variable. The vision datasets is used jointly with the AIMS dataset.     
+
+\subsection{Project A : \underline{A logistic regression model for Failure to Appear}}
+\subsubsection{The Goal}
+The goal is to construct a model which relates the probability of failure to appear (FTA) to variables through a coefficient for each variable. The Vision dataset is used jointly with the AIMS dataset. 
+~\\
+~\\
+A regression model: A statistical analysis used to predict scores on an outcome
+variable based on scores on one or more predictor variables.\\
+~\\
+Can be as simple as:
+\begin{equation}
+Y = B_{0} + B_{1}X_{1} + B_{2}X_{2} + \ldots + \epsilon_{1}+\epsilon_{2} + \ldots \\
+\end{equation}
+\begin{itemize}
+\item Y: outcome variable (ex: Will fail to appear?)
+\item X: pridictor variables (ex: Defendents age, bail amount \ldots)
+\item B: coeffecients relating X's and Y
+\item $\epsilon$: error terms (a.k.a residual)
+\end{itemize}
+~\\
+
+
+\subsubsection{Validity of model}
 
 As a proof of concept, four data variables were looked at for the initial model: \\
 ~\\
 \textbf{Characteristic of the defendant:}
-~\\
+~\\ 
 \begin{enumerate}
 \item Age at time of the bond
 \begin{figure}[H]
@@ -71,27 +104,15 @@ The average income for a zipcode was obtained through an api to the latest avail
 \includegraphics[width=0.5\paperwidth]{Forfeited_vs_Discharged_Count_Against_Bond_Amount.png}
 \end{figure}
 \end{enumerate}
-
-\subsubsection{Validity of model}
-
-A regression model: A statistical analysis used to predict scores on an outcome
-variable based on scores on one or more predictor variables.\\
 ~\\
-Can be as simple as:
-\begin{equation}
-Y = B_{0} + B_{1}X_{1} + B_{2}X_{2} + \ldots + \epsilon \\
-\end{equation}
-\begin{itemize}
-\item Y: outcome variable (ex: Will fail to appear?)
-\item X: pridictor variables (ex: Defendents age, bail amount \ldots)
-\item B: coeffecients relating X's and Y
-\item $\epsilon$: error terms (a.k.a residual)
-\end{itemize}
+\textbf{Running the Model:}
 ~\\
 Finding a relationship between X and Y which minimizes the model errors gives us:
 
-\begin{center}
-\begin{verbatim}
+
+\begin{figure}[H]
+\centering
+\begin{BVerbatim}
 Deviance Residuals: 
     Min       1Q   Median       3Q      Max  
 -2.3472  -1.0933  -0.7349   1.1296   1.8166  
@@ -105,9 +126,25 @@ catZipIncome    0.183926   0.010761  17.092  < 2e-16 ***
 genderM        -0.166691   0.053297  -3.128  0.00176 ** 
 ---
 Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
-\end{verbatim}
-\end{center}
+\end{BVerbatim}
+\end{figure}
 
+%\begin{tabular}{ l | c | c }
+%Variables & Defendant 1 & Defendant 2 \\
+%\hline
+%Age & 38  & 23 \\
+%\hline
+%Gender & Female & Male \\ 
+%\hline
+%Bond Amount & \$35,000 & \$5,000 \\ 
+%\hline
+%Zipcode Income & \$75,392 & \$101,905 \\
+%\hline
+%\hline
+%calculated probablity of FTA & 75\% & 62\% \\
+%& True Positve & False Positive
+%\end{tabular}
+%
 ~\\
 example model predicitions:
 ~\\
@@ -119,6 +156,7 @@ example model predicitions:
 \item Gender: Female 
 \item Bond Amount \$35,000
 \item Zipcode Income  \$75,392
+\item Known to have failed to appeared
 \end{itemize}
 ~\\
 Probablity calculated by the model: 75\% to fail to appear
@@ -133,59 +171,118 @@ In reality, the bond was forfeited. This is called a ``true positive''.
 \item Gender:          Male
 \item Bond Amount:    \$5,000
 \item Zipcode Income: \$101,905
+\item Known to have appeared
 \end{itemize}
-
+~\\
 Probablity calculated by the model: 62\% to fail to appear
 In reality, the defendant appeared in court and the bond was discharged. 
 This is called a ``false positive''.
-
+~\\
+~\\
 The aim is to maximize true positives and minimize false positives. 
 
-\underline{Project Goal}
 
 \begin{figure}[H]
 \centering
 %\includegraphics[width=0.45\paperwidth,page=1]{varPlot.pdf}
-\includegraphics[width=0.45\paperwidth,page=3]{varPlot.pdf}
+\includegraphics[width=0.40\paperwidth,page=3]{varPlot.pdf}
 \end{figure}
  
+\subsubsection{Deliverables}
+A ``model'' (equation) which would allow an agent to calculate the probablity of FTA given the characteristics of the defendant and the bond.
+%A confidence interval around the probability will also be calculated to give the agent a 
+The validity and performance of the model will be fully tested and reported. 
+   
 
-\subsection{Project B: \underline{Reporting of agent performance}}
+\subsubsection{Work Estimates}
+ parsing/cleaning of entire training and test datasets
+ categorizing variables (ex:work/collateral/co-signers)
+ constructing model
+ validation of model
 
-Build performance plots of agents and AIA. Reports could include three granularities, agent level, state level, and national level: 
+\textbf{1 month at \$80/hour = \$12,800}
+
+\clearpage
+\subsection{Project B: \underline{Agent Performance}}
+~\\
+\subsubsection{Ranking}
+Ranking system: \textit{Going beyond total premimum brought in:} \\
+~\\
+Goal: Construct an agent ranking system to assess the ``health'' of an 
+agent's business. The metric should not focus solely on the total premium 
+brought in, as this unfairly compare agencies in different crime rate 
+areas. The ranking metric should be built robust against fluctuations 
+in premium brought in. An agent with a low penal but good ``health'' 
+could indicate a bottlneck in the business.  Is the agent too 
+conservative? Or is the premium rate too high? The Underwriting limit too low? Etc..
+%In order to build this ranking system an initial step would be to produce performance plots of agents and AIA. Performance plots
+%could include three granularities, agent level, state level, and national level: 
+
 \begin{itemize}
 \item premiums and BUF amount obtained from agents. 
 \item Total penal written by agent
-\item granularity: agent, state, national
-\item comparison of these values by date ranges
+\item current trend
 \end{itemize}
 
-%\begin{figure}[b]
-%\centering
-%\includegraphics[width=0.45\paperwidth]{bufVsPrem2.png}
-%\end{figure}
+\subsubsection{The Arising Question}
+Once a ranking is established  
+Once the ranking metric is established, one can look for trends in the data as a solution to increase penal for an agent:
+~\\
+~\\
+\underline{Example Question:}
+\begin{center}
+\begin{quote}
+\textit{What contract variables contribute to premium collected? Is it Premium Rate? BUF Rate? Underwriting limit? Others?}
+\end{quote}
+\end{center}
+
+~\\
+Testing ``Premium Rate'':
+~\\
+~\\
+The following figures show the premium collected from agents throughout their numerous contracts with AIA:
+
+\begin{figure}[H]
+\begin{center}
+\includegraphics[width=.5\textwidth]{R_Clay_Foltz_&_Jason_Leone_Agency_in_Delaware-_Premium_Rate_vs_Premium_Collected.png}\\
+\caption{An agent with a constant premium rate}
+\end{center}
+\end{figure}
+
+\begin{center}
+\begin{figure}[H]
+\begin{subfigure}[b]{0.5\textwidth}
+\includegraphics[width=\textwidth]{Jeffrey_Fuller_Agency_in_North_Carolina-_Premium_Rate_vs_Premium_Collected.png}
+\end{subfigure}
+\begin{subfigure}[b]{0.5\textwidth}
+\includegraphics[width=\textwidth]{Antonio_Sharp_Agency_in_North_Carolina-_Premium_Rate_vs_Premium_Collected.png}
+\end{subfigure}
+\begin{subfigure}[b]{0.5\textwidth}
+\includegraphics[width=\textwidth]{Adam_Buffington_Agency_in_Minn-_Premium_Rate_vs_Premium_Collected.png}
+\end{subfigure}
+\begin{subfigure}[b]{0.5\textwidth}
+\includegraphics[width=\textwidth]{Mauricio_Correa_Agency_in_North_Carolina-_Premium_Rate_vs_Premium_Collected.png}
+\end{subfigure}
+\caption{Agents with varying premium rates}
+\end{figure}
+\end{center}
+~\\
+
+Looking at the different agencies, it becomes apparent that on average each write varying volume of penal per day.  
+
+We can construct a linear model which relates the premium collected from agents as a function of premium rate.
+Plotting these two values against each other we get: 
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.34\paperwidth]{R_Clay_Foltz_&_Jason_Leone_Agency_in_Delaware-_Premium_Rate_vs_Premium_Collected.png}\\
-\includegraphics[width=0.34\paperwidth]{Jeffrey_Fuller_Agency_in_North_Carolina-_Premium_Rate_vs_Premium_Collected.png}
-\includegraphics[width=0.34\paperwidth]{Antonio_Sharp_Agency_in_North_Carolina-_Premium_Rate_vs_Premium_Collected.png}
+\includegraphics[width=0.45\paperwidth]{premPinnedNoLine.png}
 \end{figure}
+
+
+
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.34\paperwidth]{Adam_Buffington_Agency_in_Minn-_Premium_Rate_vs_Premium_Collected.png}
-\includegraphics[width=0.34\paperwidth]{Mauricio_Correa_Agency_in_North_Carolina-_Premium_Rate_vs_Premium_Collected.png}
-\end{figure}
-
-In some fields, it is entirely expected that your R-squared values will be low. For example, any field that attempts to predict human behavior, such as psychology, typically has R-squared values lower than 50\%. Humans are simply harder to predict than, say, physical processes.
-
-
-\begin{figure}[b]
-\centering
-\includegraphics[width=0.45\paperwidth]{pinnedPremPerDay.png}
-\end{figure}
-
-\begin{verbatim}
+\begin{BVerbatim}
 Residuals:
    Min     1Q Median     3Q    Max 
 -4.875 -2.978 -1.478  1.250 19.538 
@@ -200,12 +297,15 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 Residual standard error: 4.266 on 197 degrees of freedom
 Multiple R-squared:  0.07183,Adjusted R-squared:  0.06712 
 F-statistic: 15.25 on 1 and 197 DF,  p-value: 0.0001296
-\end{verbatim}
+\end{BVerbatim}
+\end{figure}
+
 
 Adding another variable...\\
 
+\begin{figure}[H]
 \begin{center}
-\begin{verbatim}
+\begin{BVerbatim}
 Residuals:
    Min     1Q Median     3Q    Max 
 -5.875 -2.808 -1.090  1.548 20.339 
@@ -221,13 +321,23 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 Residual standard error: 4.111 on 196 degrees of freedom
 Multiple R-squared:  0.1425,Adjusted R-squared:  0.1338 
 F-statistic: 16.29 on 2 and 196 DF,  p-value: 2.856e-07
-\end{verbatim}
+\end{BVerbatim}
 \end{center}
+\end{figure}
 
-\begin{figure}[b]
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.45\paperwidth]{pinnedPremPerDay.png}
+\end{figure}
+
+
+
+\begin{figure}[H]
 \centering
 \includegraphics[width=0.45\paperwidth]{pinnedPremPerDayWithUWL.png}
 \end{figure}
+
+In some fields, it is entirely expected that your R-squared values will be low. For example, any field that attempts to predict human behavior, such as psychology, typically has R-squared values lower than 50\%. Humans are simply harder to predict than, say, physical processes.
 
 
 \end{document}
